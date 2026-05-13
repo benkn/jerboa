@@ -1,0 +1,13 @@
+[tools]
+python = "3.12"
+
+[settings]
+quiet = true
+
+[env]
+_.python.venv = { path = ".venv", create = true }
+DOMAIN_ROOT = '{{config_root}}'
+
+[tasks]
+init="pip install -r requirements.txt"
+start="python jerboa.py"
