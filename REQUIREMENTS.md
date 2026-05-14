@@ -17,7 +17,7 @@ This is a side-scrolling runner game, where the player controls a jerboa (a smal
 - The player presses SPACE or ↑ to make the jerboa jump
 - Touching a cactus, or hitting the bird from the side / underneath, ends the run
 - Landing on top of the bird stomps it: the bird despawns, the jerboa bounces, and
-  the session-wide birds-killed counter goes up
+  the run's birds-killed counter goes up
 - Score increments every frame; speed increases gradually over time
 
 ### Controls
@@ -55,10 +55,9 @@ for a more polished look over plain ASCII. Terminal must support UTF-8.
 Four states: running-A (right foot), running-B (left foot), airborne, dead.
 
 ```
-Running A:    Running B:    Airborne:     Dead:
- ▄█▖           ▄█▖           ▄█▖           ▄█▖
-▐██▌          ▐██▌          ▐██▌          ▐×█▌
- ▘▝            ▝▘                          ▘▘
+  ▟▙▄         ▟▙▄           ▟▙▄           ▟×▄
+▄▟██        ▄▟██          ▄▟██          ▄▟██
+  ▖▗          ▗▖                          ▘▘
 ```
 
 Leg animation alternates every 5 frames.
@@ -118,15 +117,13 @@ A continuous `─` line at the bottom of the play area.
 ## Collision detection
 - Simple AABB between jerboa hitbox and each cactus / the roadrunner
 - Jerboa hitbox is inset by 1 col left/right and 1 row at the top (forgiving feel)
-- Cactus / underside-bird collision triggers `alive = False`; hi-score and
-  birds-killed are preserved across restarts
+- Cactus / underside-bird collision triggers `alive = False`; hi-score is
+  preserved across restarts (birds-killed is per-run and resets)
 
-## Persistent stats (session-wide, survive `R` restarts)
-- `hi_score` — best distance reached in any run this session
-- `birds_killed` — total birds stomped across all runs this session
-
-Both are threaded through the `State` constructor on restart and reset only when
-the process exits.
+## Run stats
+- `hi_score` — session-wide; threaded through the `State` constructor on restart
+  so the best run is preserved until the process exits
+- `birds_killed` — per-run only; resets to 0 each time `R` starts a new life
 
 ## Layout
 ```

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-JERBOA — unicode terminal edition 🦕
+JERBOA — unicode terminal edition 🐭
 SPACE / ↑  to jump  │  R  to restart  │  Q  to quit
 """
 
@@ -34,25 +34,25 @@ RAMP_FRAMES     = 4000    # frames over which spacing tightens to the floor
 JERBOA_W = 4
 JERBOA_H = 3
 
-JERBOA_A = [             # running — right foot forward
-    " ▄█▖",
-    "▐██▌",
-    " ▘▝ ",
+JERBOA_A = [             # running — feet apart
+    "  ▟▙▄",
+    "▄▟██",
+    "  ▖▗",
 ]
-JERBOA_B = [             # running — left foot forward
-    " ▄█▖",
-    "▐██▌",
-    " ▝▘ ",
+JERBOA_B = [             # running — feet together
+    "  ▟▙▄",
+    "▄▟██",
+    "  ▗▖",
 ]
-JERBOA_AIR = [           # airborne
-    " ▄█▖",
-    "▐██▌",
+JERBOA_AIR = [           # airborne — feet tucked
+    "  ▟▙▄",
+    "▄▟██",
     "    ",
 ]
 JERBOA_DEAD = [          # collision — eye turns to ×
-    " ▄█▖",
-    "▐×█▌",
-    " ▘▘ ",
+    "  ▟×▄",
+    "▄▟██",
+    "  ▘▘",
 ]
 
 # Cactus variants: (width, lines_top_to_bottom)
@@ -94,12 +94,12 @@ ROADRUNNER_B = [            # wings down
 # ── Game state ────────────────────────────────────────────────────────────────
 
 class State:
-    def __init__(self, h: int, w: int, hi_score: int = 0, birds_killed: int = 0):
+    def __init__(self, h: int, w: int, hi_score: int = 0):
         self.h            = h
         self.w            = w
         self.ground       = h - 4      # row index of the ground line
         self.hi_score     = hi_score
-        self.birds_killed = birds_killed  # session-wide total, persists across restarts
+        self.birds_killed = 0          # per-run tally; resets each restart
 
         # jerboa physics (sub-pixel space)
         self._floor   = float((self.ground - JERBOA_H) * SUB)
@@ -325,8 +325,7 @@ def main():
                 if k == "q":
                     break
                 if k == "r" and not state.alive:
-                    state = State(term.height, term.width,
-                                  state.hi_score, state.birds_killed)
+                    state = State(term.height, term.width, state.hi_score)
                     sys.stdout.write(term.on_black + term.clear())
                 if str(key) == " " or getattr(key, "name", None) == "KEY_UP":
                     state.jump()
@@ -340,7 +339,7 @@ def main():
 
     # Clean up terminal on exit
     sys.stdout.write(term.normal + term.clear())
-    print("Thanks for playing! 🦕")
+    print("Thanks for playing! 🐭")
 
 
 if __name__ == "__main__":
